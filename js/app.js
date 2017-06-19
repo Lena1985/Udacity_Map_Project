@@ -35,7 +35,7 @@ var Location = function(name, lat, lng, description, marker) {
 			Locations.locations[i].infowindow.close();
 			Locations.locations[i].marker.setAnimation(null);
 		}
-		map.panTo(self.marker.getPosition())
+		map.panTo(self.marker.getPosition());
 		self.infowindow.setContent(self.description);
 		self.infowindow.open(map, self.marker);
 		self.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -61,14 +61,14 @@ var Location = function(name, lat, lng, description, marker) {
 			$('#photos').html(photoHTML);
 		}
 		$.getJSON(flickerAPI, flickrOptions, displayPhotos);
-	}
+	};
 	this.addListener = google.maps.event.addListener(self.marker, 'click', (this.showFlickrPhotos));
 	
 	/* ------------ OPEN INFOWINDOW AND GET FLICKR PHOTOS WHEN CLICKING BUTTON ------------ */
 	this.onClick = function() {
 		this.showFlickrPhotos();
 		this.openInfoWindow();
-	}
+	};
 };
 
 /* ------------ MODEL ------------ */
