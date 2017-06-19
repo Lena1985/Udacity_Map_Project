@@ -1,3 +1,165 @@
+/* ------------ ERROR HANDLING ------------ */
+/* wait 3 seconds until throwing error message if google map fails to load */
+setTimeout(function() { 
+    if(!window.google || !window.google.maps) {
+        alert("Hmm, there seems to be an error loading the Google Map. Please try again!");
+    }
+}, 3000);
+
+/* ------------ INIT MAP ------------ */
+var initMap = function() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: new google.maps.LatLng(48.1719683, 11.5842726),
+        mapTypeId: 'roadmap',
+        mapTypeControl: false,
+        styles: [
+            {
+                featureType: 'water',
+                stylers: [
+                    { color: '#052f5f' }
+                ]
+            },{
+                featureType: 'administrative',
+                elementType: 'labels.text.stroke',
+                stylers: [
+                    { color: '#ffffff' },
+                    { weight: 6 }
+                ]
+            },{
+                featureType: 'administrative',
+                elementType: 'labels.text.fill',
+                stylers: [
+                    { color: '#de369d' }
+                ]
+            },{
+                featureType: 'road.highway',
+                elementType: 'geometry.stroke',
+                stylers: [
+                    { color: '#ffdde2' },
+                    { lightness: -60 }
+                ]
+            },{
+                featureType: 'transit.station',
+                stylers: [
+                    { weight: 9 },
+                    { hue: '#de369d' }
+                ]
+            },{
+                featureType: 'road.highway',
+                elementType: 'labels.icon',
+                stylers: [
+                    { visibility: 'off' }
+                ]
+            },{
+                featureType: 'water',
+                elementType: 'labels.text.stroke',
+                stylers: [
+                    { lightness: 100 }
+                ]
+            },{
+                featureType: 'water',
+                elementType: 'labels.text.fill',
+                stylers: [
+                    { lightness: -100 }
+                ]
+            },{
+                featureType: 'poi',
+                elementType: 'geometry',
+                stylers: [
+                    { visibility: 'on' },
+                    { color: '#f4f4f4' }
+                ]
+            },{
+                featureType: 'road.highway',
+                elementType: 'geometry.fill',
+                stylers: [
+                    { color: '#f4f4f4' },
+                    { lightness: -25 }
+                ]
+            }
+        ]
+    });
+  var map;
+
+  /* ------------ VIEW MODEL ------------ */
+  var Location = function(name, lat, lng, description, marker) {
+      var self = this;
+      this.name = name;
+      this.title = name;
+      this.lat = lat;
+      this.lng = lng;
+      this.description = description;
+      this.icon = 'img/beer.png';
+      this.marker = new google.maps.Marker({
+          position: new google.maps.LatLng(self.lat, self.lng),
+          map: map,
+          title: self.name,
+          animation: google.maps.Animation.DROP,
+          icon: self.icon
+      });
+      this.infowindow = new google.maps.InfoWindow();
+      this.getAnimation = google.maps.Animation.BOUNCE;
+
+      /* ------------ OPEN INFOWINDOW AND ANIMATE WHEN CLICKING MARKER ------------ */
+      this.openInfoWindow = function() {
+          for(var i = 0; i < Locations.locations.length; i++) {
+              Locations.locations[i].infowindow.close();
+              Locations.locations[i].marker.setAnimation(null);
+          }
+          map.panTo(self.marker.getPosition());
+          self.infowindow.setContent(self.description);
+          self.infowindow.open(map, self.marker);
+          self.marker.setAnimation(google.maps.Animation.BOUNCE);
+      };
+      this.addListener = google.maps.event.addListener(self.marker, 'click', (this.openInfoWindow));
+
+      /* ------------ GET FLICKR PHOTOS WHEN CLICKING MARKER ------------ */
+      this.showFlickrPhotos = function() {
+          var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
+          var location = $(this).attr('title');
+          var flickrOptions = {
+              tags: location,
+              format: "json",
+              total: 4
+          };
+          function displayPhotos(data) {
+              var photoHTML = ' ';
+              $.each(data.items, function(i, photo) {
+                  photoHTML += '<a href="' + photo.link + '" class="image">';
+                  photoHTML += '<img src="' + photo.media.m + '"></a></li>';
+              });
+              photoHTML += ' ';
+              $('#photos').html(photoHTML);
+          }
+          $.getJSON(flickerAPI, flickrOptions, displayPhotos);
+      };
+      this.addListener = google.maps.event.addListener(self.marker, 'click', (this.showFlickrPhotos));
+
+      /* ------------ OPEN INFOWINDOW AND GET FLICKR PHOTOS WHEN CLICKING BUTTON ------------ */
+      this.onClick = function() {
+          this.showFlickrPhotos();
+          this.openInfoWindow();
+      };
+  };
+
+  /* ------------ MODEL ------------ */
+  var Locations = {
+      locations: [
+          new Location("Eisbach", 48.1592947, 11.6016883, infoEisbach),
+          new Location("Marienplatz", 48.1373968, 11.5732598, infoMarienplatz),
+          new Location("Oktoberfest Munich", 48.131445, 11.5463691, infoOktoberfest),
+          new Location("Friedensengel", 48.141356, 11.5947738, infoFriedensengel),
+          new Location("Schloss Nymphenburg", 48.1582711, 11.5011256, infoNymphenburg),
+          new Location("Frauenkirche Munich", 48.1386346, 11.5714367, infoFrauenkirche),
+          new Location("Allianz Arena", 48.2188033, 11.6225185, infoAllianzArena),
+          new Location("Olympiaturm Munich", 48.1898006, 11.5406359, infoOlympiapark)
+      ]
+  };
+
+  ko.applyBindings(Locations);
+};
+
 /* ------------ Store locations information which will be displayed in the info windows ------------ */
 var infoEisbach = "<h3>The Eisbach</h3>" + "<p> is a small man-made river, 2 kilometres long, in Munich. It flows through the park known as the Englischer Garten and is a side arm of the Isar River. A manmade wave has been created on one section.</p>";
 var infoMarienplatz = "<h3>The Marienplatz</h3>" + "<p>is a central square in the city centre of Munich, Germany. It has been the city's main square since 1158.</p>";
@@ -8,81 +170,3 @@ var infoFrauenkirche = "<h3>The Frauenkirche</h3>" + "<p> is a church in the Bav
 var infoAllianzArena = "<h3>The Allianz Arena</h3>" + "<p> is a football stadium in Munich, Bavaria, Germany with a 75,000 seating capacity. Widely known for its exterior of inflated ETFE plastic panels, it is the first stadium in the world with a full colour changing exterior.</p>";
 var infoOlympiapark = "<h3>The Olympiapark München</h3>" + "<p> in Munich, Germany, is an Olympic Park which was constructed for the 1972 Summer Olympics. Located in the Oberwiesenfeld neighborhood of Munich, the Park continues to serve as a venue for cultural, social, and religious events such as events of worship.</p>";
 
-var map;
-
-/* ------------ VIEW MODEL ------------ */
-var Location = function(name, lat, lng, description, marker) {
-	var self = this;
-	this.name = name;
-	this.title = name;
-	this.lat = lat;
-	this.lng = lng;
-	this.description = description;
-	this.icon = 'img/beer.png';
-	this.marker = new google.maps.Marker({
-		position: new google.maps.LatLng(self.lat, self.lng),
-		map: map,
-		title: self.name,
-		animation: google.maps.Animation.DROP,
-		icon: self.icon
-	});
-	this.infowindow = new google.maps.InfoWindow();
-	this.getAnimation = google.maps.Animation.BOUNCE;
-
-	/* ------------ OPEN INFOWINDOW AND ANIMATE WHEN CLICKING MARKER ------------ */
-	this.openInfoWindow = function() {
-		for(var i = 0; i < Locations.locations.length; i++) {
-			Locations.locations[i].infowindow.close();
-			Locations.locations[i].marker.setAnimation(null);
-		}
-		map.panTo(self.marker.getPosition());
-		self.infowindow.setContent(self.description);
-		self.infowindow.open(map, self.marker);
-		self.marker.setAnimation(google.maps.Animation.BOUNCE);
-	};
-	this.addListener = google.maps.event.addListener(self.marker, 'click', (this.openInfoWindow));
-	
-	/* ------------ GET FLICKR PHOTOS WHEN CLICKING MARKER ------------ */
-	this.showFlickrPhotos = function() {
-		var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
-		var location = $(this).attr('title');
-		var flickrOptions = {
-			tags: location,
-			format: "json",
-			total: 4
-		};
-		function displayPhotos(data) {
-			var photoHTML = ' ';
-			$.each(data.items, function(i, photo) {
-				photoHTML += '<a href="' + photo.link + '" class="image">';
-				photoHTML += '<img src="' + photo.media.m + '"></a></li>';
-			});
-			photoHTML += ' ';
-			$('#photos').html(photoHTML);
-		}
-		$.getJSON(flickerAPI, flickrOptions, displayPhotos);
-	};
-	this.addListener = google.maps.event.addListener(self.marker, 'click', (this.showFlickrPhotos));
-	
-	/* ------------ OPEN INFOWINDOW AND GET FLICKR PHOTOS WHEN CLICKING BUTTON ------------ */
-	this.onClick = function() {
-		this.showFlickrPhotos();
-		this.openInfoWindow();
-	};
-};
-
-/* ------------ MODEL ------------ */
-var Locations = {
-	locations: [
-		new Location("Eisbach", 48.1592947, 11.6016883, infoEisbach),
-		new Location("Marienplatz", 48.1373968, 11.5732598, infoMarienplatz),
-		new Location("Oktoberfest Munich", 48.131445, 11.5463691, infoOktoberfest),
-		new Location("Friedensengel", 48.141356, 11.5947738, infoFriedensengel),
-		new Location("Schloss Nymphenburg", 48.1582711, 11.5011256, infoNymphenburg),
-		new Location("Frauenkirche Munich", 48.1386346, 11.5714367, infoFrauenkirche),
-		new Location("Allianz Arena", 48.2188033, 11.6225185, infoAllianzArena),
-		new Location("Olympiaturm Munich", 48.1898006, 11.5406359, infoOlympiapark)
-	]
-};
-
-ko.applyBindings(Locations);
