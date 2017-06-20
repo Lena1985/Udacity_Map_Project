@@ -1,10 +1,15 @@
 /* ------------ ERROR HANDLING ------------ */
 /* wait 3 seconds until throwing error message if google map fails to load */
-setTimeout(function() { 
-    if(!window.google || !window.google.maps) {
-        alert("Hmm, there seems to be an error loading the Google Map. Please try again!");
-    }
-}, 3000);
+//setTimeout(function() { 
+//    if(!window.google || !window.google.maps) {
+//        alert("Hmm, there seems to be an error loading the Google Map. Please try again!");
+//    }
+//}, 3000);
+
+function errorHandling() {
+	alert("Google Maps has failed to load. Please try again.");
+}
+
 
 /* ------------ INIT MAP ------------ */
 var initMap = function() {
