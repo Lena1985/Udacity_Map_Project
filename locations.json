@@ -1,0 +1,50 @@
+const locationJSON = [
+	{
+		name: "Eisbach",
+		lat: 48.1592947,
+		lng: 11.6016883,
+		description: infoEisbach
+	},
+	{
+		name: "Marienplatz",
+		lat: 48.1373968,
+		lng: 11.5732598,
+		description: infoMarienplatz
+	},
+	{
+		name: "Oktoberfest Munich",
+		lat: 48.131445,
+		lng: 11.5463691,
+		description: infoOktoberfest
+	},
+	{
+		name: "Friedensengel",
+		lat: 48.141356,
+		lng: 11.5947738,
+		description: infoFriedensengel
+	},
+	{
+		name: "Schloss Nymphenburg",
+		lat: 48.1582711,
+		lng: 11.5011256,
+		description: infoNymphenburg
+	},
+	{
+		name: "Frauenkirche Munich",
+		lat: 48.1386346,
+		lng: 11.5714367,
+		description: infoFrauenkirche
+	},
+	{
+		name: "Allianz Arena",
+		lat: 48.2188033,
+		lng: 11.6225185,
+		description: infoAllianzArena
+	},
+	{
+		name: "Olympiaturm Munich",
+		lat: 48.1898006,
+		lng: 11.5406359,
+		description: infoOlympiapark
+	},
+];

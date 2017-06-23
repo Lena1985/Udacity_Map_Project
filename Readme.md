@@ -4,7 +4,7 @@
 ## How to run the App
 -----------------------------
 
-* If you open the app locally you can run it on a localhost. If you don't know how to do this, here are the insructions:
+* If you open the app locally you can run it on a localhost. If you are not familiar with doing that, here are the insructions:
 
 **  You need to install Python. But if you are using Linux or Mac OS X, it should be available on your system already. If you are using Windows, you can get an installer from the Python homepage and follow the instructions to install it:
 
@@ -46,11 +46,13 @@ Then you can use the App...
 
 * choose a location out of the list on the left side of the Google Map and click on one.
 
+* You can also use the search function above the Location list. Here you can search a location by name.
+
 The active marker starts bouncing as soon as it's clicked and an infowindow will open with detailed information about the location. 
 Additionally you will get Flickr Photos of the location which will give you a better impression.
 
 ## Error Handling
 ------------------
 
-Sometimes because of the asynchronous loading of the Google Map, there miight accure an error. 
-If the Map does not load you will get an alert window with an error message.
+Sometimes there might occure an error. 
+If the Map or the Flickr App does not load you will get an alert window with an error message.
