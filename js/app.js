@@ -97,7 +97,7 @@ class LocationModel {
 		});
 
 		return marker;
-	};
+	}
 
 	/* FUNCTION TO ANIMATE MARKER AND SHOW INFOWINDOW */
 	showInfo(place) {
@@ -107,7 +107,7 @@ class LocationModel {
 		}, 2800);
 		infowindow.setContent(this.description);
 		infowindow.open(map, this.marker);
-	};
+	}
 
 	/* FLICKR API FUNCTION */
 	showFlickr(place) {
@@ -134,8 +134,8 @@ class LocationModel {
 	onClick() {
 		this.showFlickr();
 		this.showInfo();
-	};
-};
+	}
+}
 
 /* ------------ VIEWMODEL ------------ */
 class ViewModel {
@@ -152,7 +152,7 @@ class ViewModel {
 			if(!this.filterKeyword() || this.filterKeyword().trim() === '') {
 				this.locationsArray().forEach((place) => {
 					place.marker.setVisible(true);
-				})
+				});
 				return this.locationsArray();
 			} else {
 				return ko.utils.arrayFilter(this.locationsArray(), (place) => {
@@ -163,7 +163,7 @@ class ViewModel {
 			}
 		});
 	}
-};
+}
 
 /* ------------ INIT MAP ------------ */
 initMap = () => {
